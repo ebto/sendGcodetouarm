@@ -31,14 +31,14 @@
    tension. Hold the uArm or put a cushion around to protect the effector.
 
    Created: 26 July 2017
-   Updated: 30 July 2017
+   Updated: 29 July 2017
    Author: Eric Ong (ebto on GitHub)
    Credits: sketch is based on sample provided on Arduino IDE - EsploraKart,
-   written by Enrico Gueli. Original comments are left as-is,
+   written by Enrico Gueli.
 
 */
 
-#include <SoftwareSerial.h>
+//#include <SoftwareSerial.h>
 #include <Esplora.h>
 #include <Keyboard.h>
 #include <TFT.h>
@@ -67,7 +67,8 @@ void setup() {
   // clear the screen with a black background
   EsploraTFT.background(ST7735_BLACK);
 
-  DisplaySplash(); // display sketch name
+  // display sketch name
+  DisplaySplash();
 
   // set the font size for the loop
   EsploraTFT.setTextSize(2);
@@ -75,19 +76,13 @@ void setup() {
   // set the font color
   EsploraTFT.stroke(ST7735_GREEN);
   EsploraTFT.text("Button:", 0, 0);
-
-  //  Serial.println("Move to default resting position");
-  //  Serial.println("#25 G0 X100.15 Y-7.39 Z100.57 F10000");
-
 }
 
 void loop() {
   // Iterate through all the buttons:
   for (byte thisButton = 0; thisButton < 4; thisButton++) {
-
     boolean lastState = buttonStates[thisButton];
     boolean newState = Esplora.readButton(buttons[thisButton]);
-
     if (lastState != newState) { // Something changed!
       /*
         The Keyboard library allows you to "press" and "release" the
@@ -97,11 +92,11 @@ void loop() {
       if (newState == PRESSED) {
 
         EsploraTFT.stroke(ST7735_GREEN);
-
         if (buttons[thisButton] == SWITCH_DOWN) {
           //Serial.print("Down\t");
           Keyboard.print(vPrefix + "X150 Y0 Z75" + vSpeed);
           EsploraTFT.text("Down", 100, 0);
+
           delay(240);
           EsploraTFT.stroke(ST7735_BLACK);
           EsploraTFT.text("Down", 100, 0);
@@ -127,16 +122,10 @@ void loop() {
           EsploraTFT.stroke(ST7735_BLACK);
           EsploraTFT.text("Right", 100, 0);
         } else {
-          //EsploraTFT.text("Idle", 100, 0);
-          delay(240);
-          EsploraTFT.stroke(ST7735_BLACK);
-          EsploraTFT.text("Idle", 100, 0);
         }
       } // if newstate == PRESSED end
-
       // Store the new button state, so you can sense a difference later:
       buttonStates[thisButton] = newState;
-
     } // if laststate != newstate
   } // for..loop end
 }  // void loop end
